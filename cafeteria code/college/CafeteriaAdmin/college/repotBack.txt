@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>samart-card-billing-System</title>
+   <!-- Font Awesome -->
+   <link rel="stylesheet" href="../../asset/fontawesome/css/all.min.css">
+   <link rel="stylesheet" href="../../asset/css/adminlte.min.css">
+   <link rel="stylesheet" href="../../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   <link rel ="stylesheet"  type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
+    <link rel ="stylesheet" type ="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+   <style type="text/css">
+      .txt {
+         padding-left: 20px !important;
+      }
+
+      .text-color {
+         color: rgb(0,166,90);
+      }
+      ul.nav-sidebar li a i{
+         color: rgb(0,166,90);
+      }
+      li a i{
+         color: #fff;
+      }
+   </style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+   <div class="wrapper">
+     
+      <?php
+    include_once('includes/navbar.php');
+    include_once('includes/aside.php');
+    include_once('../../include/connection.php');
+    $card =[];
+    if(isset($_SESSION['NormalOwneremail']))
+    {
+
+    $userid =$_SESSION['id'];
+    ?>
+   
+      
+         <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+               <div class="container-fluid">
+                  <div class="row mb-2">
+                     <div class="col-sm-6">
+                     <h1 class="m-0"><span class="fa fa-book-open"></span>  Report</h1>
+                     </div>
+                     <!-- /.col -->
+                     <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                           <li class="breadcrumb-item"><a href="#">Home</a></li>
+                           <li class="breadcrumb-item active">Reports</li>
+                        </ol>
+                     </div>
+                  </div>
+                  <div class="card-header" style="background-color:rgb(8,59,102);">
+
+<a class="btn btn-sm text-white" href="#" data-toggle="modal"
+   data-target="#add" style="border: 1px solid #ddd;"><i
+   class="fa fa-book"></i> generate report</a>
+</div>
+               </div>
+            </div>
+            <section class="content">
+               <div class="container-fluid">
+                 
+                     <br>
+                     <div class="row">
+                    
+                     <div class="col-md-8 mt-4 m-auto">
+                              <div class="card card-info">
+                               
+               <table id="example1" class="table table-bordered table-responsive">
+                           <div class ="text-center h3"> customer usage information</div>
+                           <?php
+                                   if(isset($_POST['submit']))
+                                   {
+                                       if(!empty($_POST['startdate']) && !empty($_POST['number']) && empty($_POST['enddate']))
+                                       {
+                                          $sql;
+                                         
+
+                                          $start=$_POST['startdate'];
+                                          $number=$_POST['number'];
+
+                                          $category=$_POST['category'];
+                                          if($category =="food")
+                                          {
+                                             $sql ='SELECT amount,foodname,foodreport.createdAt FROM food   RIGHT JOIN  foodreport on food.foodId = foodreport.foodReportId LEFT join customer on customer.cardNumber = foodreport.`cardnumber` where customer.phoneNumber="'.$number.'" and date(foodreport.createdAt)="'.$start.'"';
+                                                ?>
+                                                   <thead>
+                                                <tr>
+                                                   <th>foodname</th>
+                                                   <th>Amount</th>
+                                                <th>at</th>
+                                                </tr>
+                                             </thead>
+                                             <tbody>
+
+                                             <?php
+                                             if($sqlResult = mysqli_query($con,$sql))
+                                             {
+                                                if(mysqli_num_rows($sqlResult)>0)
+                                                {
+                                                   while($row = mysqli_fetch_assoc($sqlResult))
+                                                   {
+                                                              
+                                                       echo "<tr>";
+                                                       echo '<td scope="row">'. $row['foodname'].'</td>';
+                                                       echo '<td scope="row">'. $row['amount'].'</td>';
+                                                       echo '<td scope="row">'. $row['createdAt'].'</td>';
+                                                   
+                                                     
+                                                       echo "</tr>";
+                     
+                                                   }
+                                                }
+                                              
+                                                   else{
+                                                      echo "<td colspan=3 class='text-center' >no data available</td>";
+   
+                                                   
+                                                }
+                                               
+                                             }
+                                          }
+                                          else{
+                                             $sql ='SELECT balance_recharge.balance,balance_recharge.created_at FROM balance_recharge   RIGHT join balance on balance.id = balance_recharge.rechargeid LEFT JOIN customer on customer.cardNumber = balance.Ccardnumber WHERE customer.phoneNumber="'.$number.'" and date(balance_recharge.created_at)="'.$start.'"';
+                                          
+                                             ?>
+                                             <thead>
+                                          <tr>
+                                             <th>balance</th>
+                                             <th>created </th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+
+                                       <?php
+                                          
+                                          if($sqlResult = mysqli_query($con,$sql))
+                                          {
+                                             if(mysqli_num_rows($sqlResult)>0)
+                                             {
+                                                while($row = mysqli_fetch_assoc($sqlResult))
+                                                {
+                                                           
+                                                    echo "<tr>";
+                                                    echo '<td scope="row">'. $row['balance'].'</td>';
+                                                    echo '<td scope="row">'. $row['created_at'].'</td>';
+                                                
+                                                  
+                                                    echo "</tr>";
+                  
+                                                }
+                                             }
+                                             else{
+                                                echo "<td colspan=2  class='text-center'>no data available</td>";
+
+                                             }
+                                            
+                                          }
+                                          // unset( $_SESSION['CardnumberScaned']);
+                                    
+                                       }
+                                       }
+                                       else if(!empty($_POST['startdate']) &&  !empty($_POST['number']) && !empty($_POST['enddate']))
+                                       {
+                                          $start=$_POST['startdate'];
+                                          $number=$_POST['number'];
+                                        
+                                          $end=$_POST['enddate'];
+
+                                          $category=$_POST['category'];
+                                          if($category =="food")
+                                          {
+                                          $sql ='SELECT amount,foodname,foodreport.createdAt FROM food   RIGHT JOIN  foodreport on food.foodId = foodreport.foodReportId LEFT join customer on customer.cardNumber = foodreport.`cardnumber`  where customer.phoneNumber="'.$number.'" and date(foodreport.createdAt) between "'.$start.'" and "'.$end.'" ';
+
+                                          ?>
+                                          <thead>
+                                       <tr>
+                                          <th>foodname</th>
+                                          <th>Amount</th>
+                                       <th>at</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <?php
+                                          if($sqlResult = mysqli_query($con,$sql))
+                                          {
+                                             if(mysqli_num_rows($sqlResult)>0)
+                                             {
+                                                while($row = mysqli_fetch_assoc($sqlResult))
+                                                {
+                                                           
+                                                    echo "<tr>";
+                                                    echo '<td scope="row">'. $row['foodname'].'</td>';
+                                                    echo '<td scope="row">'. $row['amount'].'</td>';
+                                                    echo '<td scope="row">'. $row['createdAt'].'</td>';
+                                                  
+                                                  
+                                                    echo "</tr>";
+                  
+                                                }
+                                             }
+                                             else{
+                                                echo "<td colspan=3 class='text-center' >no data available</td>";
+
+                                             }
+                                            
+                                          }
+                                          }
+                                          else{
+                                             $sql ='SELECT balance_recharge.balance,balance_recharge.created_at FROM balance_recharge   RIGHT join balance on balance.id = balance_recharge.rechargeid LEFT JOIN customer on customer.cardNumber = balance.Ccardnumber WHERE customer.phoneNumber="'.$number.'" and date(balance_recharge.created_at)between "'.$start.'" and "'.$end.'" ';
+                                             ?>
+                                             <thead>
+                                             <tr>
+                                                <th>balance</th>
+                                                <th>created </th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+   
+                                          <?php
+                                             if($sqlResult = mysqli_query($con,$sql))
+                                             {
+                                                if(mysqli_num_rows($sqlResult)>0)
+                                                {
+                                                   while($row = mysqli_fetch_assoc($sqlResult))
+                                                   {
+                                                              
+                                                       echo "<tr>";
+                                                       echo '<td scope="row">'. $row['balance'].'</td>';
+                                                       echo '<td scope="row">'. $row['created_at'].'</td>';
+                                                   
+                                                     
+                                                       echo "</tr>";
+                     
+                                                   }
+                                                }
+                                                else{
+                                                   echo "<td colspan=2 >no data available</td>";
+
+                                                }
+                                               
+                                             }
+
+
+                                          }
+                                          // unset( $_SESSION['CardnumberScaned']);
+                                       }
+                                       else if(empty($_POST['startdate']) &&  empty($_POST['enddate']))
+                                       {
+    
+                                             echo " please choose date";
+                                           
+                                        }
+                                  
+                                   }
+                                  
+
+                              ?>
+                           </tbody>
+                        </table>
+               </div>
+               </div>
+               </div>
+                   
+                    
+                  </div>
+               </div>
+               <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+         </div>
+         <!-- /.content-wrapper -->
+      </div>
+      <!-- ./wrapper -->
+      <div id="add" class="modal animated rubberBand delete-modal" role="dialog">
+         <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+               <div class="modal-body text-center">
+                  <form  id ="employeeM" method ="post" action ="<?=$_SERVER['PHP_SELF'];?>">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-md-12">
+
+                              <div class="card-header">
+                                 <span class="fa fa-user"> Generate customer usage Report</span>
+                              </div>
+
+                              <div class="row">
+
+                              <div class="col-md-6 ">
+
+                              <div class="form-group">
+                                <label for="">Phone number</label>
+                                 <input type="text" class="form-control" name="number" >
+                              </div>
+
+                              </div>
+                              <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="">category</label>
+                                      <select class="form-control" name="category" id="category">
+                                        <option value ="">select category</option>
+                                        <option value ="balance">Money</option>
+                                        <option value ="food">Food</option>
+                                      </select>
+                                    </div>
+
+                              </div>
+                              </div>
+
+                              <div class="row">
+                                 <!-- <div class="row"> -->
+                                    <div class="col-md-6">
+                                       <div class="form-group">
+                                          <label>start / required date</label>
+                                          <input type="date" class="form-control"  name ="startdate" placeholder="FIrst Name">
+                                       </div>
+                                    </div>
+                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                       <label>End date</label>
+                                       <input type="date"  name ="enddate" class="form-control" placeholder="Middle Name">
+                                    </div>
+                                 </div>
+                                 
+
+
+                                 <!-- </div> -->
+                                
+                               
+                                                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /.card-body -->
+                     <div class="card-footer">
+                        <a href="#" class="btn btn-danger" data-dismiss="modal">Close</a>
+                        <input type="submit"  name ="submit" class="btn btn-primary" value ="save">
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- jQuery -->
+      <script src="../../asset/jquery/jquery.min.js"></script>
+      <script src="../../asset/js/bootstrap.bundle.min.js"></script>
+      <script src="../../asset/js/adminlte.js"></script>
+      <!-- DataTables  & Plugins -->
+      <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+     
+     
+      
+  <script src="../../asset/js/chart.js"></script>
+  <script>
+    $(function () {
+           $("#example1").DataTable(
+            {
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 
+                {
+    extend: 'pdf',
+    text: 'pdf',
+    title: function () { return "one"; },
+  }
+            ]
+        }
+           );
+         });
+    document.addEventListener("DOMContentLoaded", function() {
+      // Pie chart
+       var values = <?=json_encode($card);?>;
+      
+      
+      new Chart(document.getElementById("chartjs-pie"), {
+        type: "pie",
+        data: {
+          labels: ["total","taken"," deactivaed","active"],
+          datasets: [{
+            data: values,
+            backgroundColor: [
+              window.theme.primary,
+              window.theme.warning,
+              window.theme.danger,
+              window.theme.success,
+            ],
+            borderColor: "transparent"
+          }]
+        },
+        options: {
+          maintainAspectRatio: true,
+          legend: {
+            display: true
+          }
+        }
+      });
+    });
+  </script>
+   </body>
+   <?php
+      }
+      else
+      {
+         header("location:../../index.php");
+
+      }
+      ?>
+</html>

@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+    <TITLE>jsPDF HTML Example with html2canvas for Multiple Pages PDF</TITLE>
+    <style>
+        #doc-target {
+            font-family: sans-serif;
+            -webkit-font-smoothing: antialiased;
+            color: #000;
+            line-height: 1.6em;
+            margin: 0 auto;
+        }
+
+        #outer {
+            padding: 72pt 72pt 72pt 72pt;
+            border: 1px solid #000;
+            margin: 0 auto;
+            width: 550px;
+        }
+    </style>
+</HEAD>
+<BODY>
+    <div id="container">
+        <p>
+            <button class="btn" onclick="generatePdf()">Download PDF</button>
+        </p>
+        <div id="outer">
+            <div id="doc-target">
+                <h1>jsPDF HTML Example</h1>
+                <div id="lipsum">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tempor purus a congue
+                        ullamcorper.
+                        Nunc
+                        vulputate eros nunc, sed molestie orci interdum ut. Mauris non tristique neque, ut tincidunt
+                        lectus.
+                        Nunc sollicitudin eros sapien. Donec metus ex, vestibulum vel pharetra in, convallis id diam.
+                        Sed eu
+                        tellus pulvinar, fringilla est ut, feugiat nibh. Etiam eget commodo risus. Proin faucibus
+                        elementum
+                        enim, ut hendrerit nisi convallis at. Pellentesque volutpat, purus faucibus varius tincidunt,
+                        nulla
+                        erat
+                        convallis lacus, eu accumsan felis mauris eget velit. Vestibulum a neque purus. Vestibulum in
+                        ultricies
+                        justo. Fusce dapibus, sapien a mollis luctus, risus dolor hendrerit ex, in semper justo enim sed
+                        ante.
+                        Morbi ut urna et velit finibus vehicula. Vivamus elementum egestas ultrices. Proin rutrum orci
+                        odio,
+                        sit
+                        amet hendrerit diam vulputate a.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</BODY>
+</HTML>

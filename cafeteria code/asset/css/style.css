@@ -1,0 +1,29 @@
+body{
+	overflow: visible;
+}
+nav.mt-2 ul.nav-sidebar li p{
+	color: #fff !important;
+}
+nav.mt-2 ul.nav-sidebar li i{
+	color: #fff !important;
+}
+nav.mt-2 ul.nav-sidebar li a:hover{
+	background-color:  rgba(222, 238, 241, 0.5) !important;
+}
+
+.btn-cancel{
+	background-color: #e4c79f !important;
+	color: aliceblue !important;
+}
+
+.btn-save{
+	background-color: #5a7050 !important;
+	color: aliceblue !important;
+}
+
+table td{
+		font-size: 13px !important;
+	letter-spacing: 0.0625em;
+	margin:-10px;
+	border-spacing: 1em;
+}
